@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+int main(){
+  int *pont; 
+  printf("endereco: %p\n\n", pont); 
+  pont = (int *) malloc(sizeof(int));
+  printf ("Endereco: %p  \nValor: %d\n\n", pont, *pont);
+  *pont = 54; 
+  printf("Endereço: %p \nValor: %d\n\n", pont, *pont);
+  system("pause"); 
+  return 0;
+}
