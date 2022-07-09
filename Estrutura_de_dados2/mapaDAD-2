@@ -1,0 +1,218 @@
+// Bibliotecas
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+
+// Constantes
+#define tamanho 30
+#define E 0
+#define D 1
+#define R -1
+
+// Estrutura
+struct str_no {
+	int dado;
+	int esquerda;
+	int direita;
+	int pai;
+};
+
+// Variaveris
+struct str_no arvore[tamanho];
+int indice;
+int opt = -1;
+
+// Prototipacao
+void arvore_insere(int pai, int dado, int lado);
+int arvore_procura(int dado);
+void menu_principal();
+void menu_inserir();
+void menu_pesquisar();
+void gerar_arvore_ra();
+
+// Desenha o menu principal na tela
+void menu_principal(){
+	system("cls");
+	int i;
+	imprimir_arvore();
+	printf("\n\n========================================\n");
+	printf("\n1 - Gerar Arvore Binaria do RA = 21139129-5");
+	printf("\n2 - Inserir um NO na arvore");
+	printf("\n3 - Pesquisar um NO na arvore");
+	printf("\n0 - Sair...\n\n");
+}
+
+// Desenha o menu inserir na tela 
+void menu_inserir(){
+	system("cls");
+	printf("\n========================================\n");
+	printf("\nDigite o valor do PAI: ");
+	fflush(stdin);
+	int valorPai;
+	scanf("%d", &valorPai);
+	
+	printf("\nDigite o valor do NO: ");
+	fflush(stdin);
+	int valorNo;
+	scanf("%d", &valorNo);
+	
+	printf("\nDigite o lado da SUBARVORE (E=%d/D=%d/R=%d): ", E, D, R);
+	fflush(stdin);
+	int lado;
+	scanf("%d", &lado);
+	printf("\n========================================\n");
+	
+	
+	int buscaIndicePai = arvore_procura(valorPai);
+	arvore_insere(buscaIndicePai, valorNo, lado);
+}
+
+// Desenha o menu pesquisar na tela
+void menu_pesquisar(){
+	printf("\n========================================\n");
+	printf("\n1 - Digite o valor do NO: ");
+	fflush(stdin);
+	int no;
+	scanf("%d", &no);
+
+	int buscaIndice = arvore_procura(no);
+	printf("\nNo %d", arvore[buscaIndice].dado);
+	
+	int esquerda = arvore[buscaIndice].esquerda;
+	printf("\nFilho Esquerda: %d", arvore[esquerda].dado);
+	
+	int direita = arvore[buscaIndice].direita;
+	printf("\nFilho Direita: %d\n\n", arvore[direita].dado);
+}
+
+// Procura NO
+int arvore_procura(int dado){
+	if(indice != 0){
+		int i;
+		for(i = 0; i < indice; i++){
+			if(arvore[i].dado == dado){
+				return i;
+			}
+		}
+	} else {
+		return 0;
+	}
+}
+
+// Inserir NO
+void arvore_insere(int pai, int dado, int lado){
+	
+	arvore[indice].dado = dado;
+	arvore[indice].pai = pai;
+	
+	switch(lado){
+		case E:
+			arvore[pai].esquerda = indice;
+			arvore[indice].esquerda = -1;
+			arvore[indice].direita = -1;
+			indice++;
+			break;
+		case D:
+			arvore[pai].direita = indice;
+			arvore[indice].esquerda = -1;
+			arvore[indice].direita = -1;
+			indice++;
+			break;
+		case R:
+			arvore[indice].pai = -1;
+			arvore[indice].esquerda = -1;
+			arvore[indice].direita = -1;
+			indice++;
+			break;
+		default:
+			break;
+	}
+}
+
+void gerar_arvore_ra(){
+	// RA = 21139129-5
+	// RA Ordenado = 1112 2 3599
+	
+	// RA Arvore Esquerda = 11 1 2
+	// SubArvore Esquerda = 1 1
+	// SubArvore Direita = 2
+
+	// SubArvore Direita = 3 5 99
+	// RA Arvore Esquerda = 3
+	// SubArvore Direita = 9 9
+		
+	//arvore_insere(int pai, int dado, int lado);
+	arvore_insere(NULL, 2, R); //indice = 0
+	arvore_insere(0, 1, E); //indice = 1
+	arvore_insere(1, 1, E); //indice = 2
+	arvore_insere(2, 1, E); //indice = 3
+	arvore_insere(1, 2, D); //indice = 4
+	arvore_insere(0, 5, D); //indice = 5
+	arvore_insere(5, 3, E); //indice = 6
+	arvore_insere(5, 9, D); //indice = 7
+	arvore_insere(7, 9, E); //indice = 8
+}
+
+void imprimir_arvore(){
+	if(indice != 0){
+		int i;
+		for(i = 0; i < indice; i++){
+			printf("\n\n\t DADO: %d", arvore[i].dado);	
+			
+			int pai = arvore[i].pai;
+			if(pai != -1){
+				printf("\t PAI: %d \n", arvore[pai].dado);	
+			}       
+			else{
+				printf("\tNO RAIZ! \n");
+			}
+			
+			int esquerda = arvore[i].esquerda;
+			if(esquerda != -1){
+				printf("\tESQUERDO: %d", arvore[esquerda].dado);	
+			}       
+			else{
+				printf("\tESQUERDO: NULL");
+			}
+			
+			int direita = arvore[i].direita;
+			if(direita != -1){
+				printf("\tDIREITO: %d", arvore[direita].dado);
+			}       
+			else{
+				printf("\tDIREITO: NULL");
+			}
+		}
+	} else {
+		return 0;
+	}       
+}
+
+// Funcao principal
+int main(){
+	do {
+		menu_principal();
+		fflush(stdin);
+		scanf("%d", &opt);
+		
+		switch(opt){
+			case 1:
+				gerar_arvore_ra();
+				break;
+			case 2:
+				menu_inserir();
+				break;
+			case 3:
+				menu_pesquisar();
+				break;
+			default:
+				break;
+		}
+	} while(opt != 0);
+}
+
+
+
+
+
+4
